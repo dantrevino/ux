@@ -5,9 +5,10 @@ import { PoweredBy, Screen, ScreenActions, ScreenBody, ScreenFooter, Title } fro
 import { ScreenHeader } from '@components/connected-screen-header';
 
 import { useAppDetails } from '@common/hooks/useAppDetails';
-import { useDispatch } from 'react-redux';
+import { useDispatch } from '@common/hooks/use-dispatch';
 import { doFinishSignIn, doSetUsername } from '@store/onboarding/actions';
 import { useWallet } from '@common/hooks/use-wallet';
+import { UsernameRegistryError, ErrorReason } from './registery-error';
 
 import { DEFAULT_PASSWORD, ScreenPaths } from '@store/onboarding/types';
 import { Identity, IdentityNameValidityError, registerSubdomain, validateSubdomain } from '@blockstack/keychain';
@@ -33,19 +34,18 @@ const errorTextMap = {
   [IdentityNameValidityError.UNAVAILABLE]: identityNameUnavailableError,
 };
 
-interface UsernameProps {}
-
-export const Username: React.FC<UsernameProps> = () => {
+export const Username: React.FC<{}> = () => {
   const { pathname } = useLocation();
 
   const { wallet } = useWallet();
   const dispatch = useDispatch();
   const { name } = useAppDetails();
-  const { doChangeScreen, doTrack } = useAnalytics();
+  const { doTrack } = useAnalytics();
 
-  document.title = `${name} with Blockstack`;
   const [error, setError] = useState<IdentityNameValidityError | null>(null);
   const [status, setStatus] = useState('initial');
+  const [submissionError, setSubmissionError] = useState<ErrorReason | undefined>();
+  document.title = `${name} with Blockstack`;
   const setLoadingStatus = () => setStatus('loading');
   const setErrorStatus = () => setStatus('error');
 
@@ -99,13 +99,30 @@ export const Username: React.FC<UsernameProps> = () => {
         identity,
       });
       doTrack(USERNAME_SUBMIT_SUCCESS);
-      dispatch(didGenerateWallet(wallet));
-      dispatch(doFinishSignIn({ identityIndex }));
+      await dispatch(didGenerateWallet(wallet));
+      await dispatch(doFinishSignIn({ identityIndex }));
     } catch (error) {
       doTrack(USERNAME_REGISTER_FAILED, { status: error.status });
-      dispatch(doChangeScreen(ScreenPaths.REGISTRY_ERROR));
+      if (error.status === 409) {
+        setSubmissionError('rateLimited');
+      } else {
+        setSubmissionError('network');
+      }
     }
   };
+
+  if (submissionError) {
+    return (
+      <UsernameRegistryError
+        errorReason={submissionError}
+        onTryAgain={() => {
+          setSubmissionError(undefined);
+          setLoadingStatus();
+          onSubmit();
+        }}
+      />
+    );
+  }
 
   return (
     <Screen onSubmit={onSubmit}>

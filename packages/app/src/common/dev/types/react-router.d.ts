@@ -1,16 +1,11 @@
 import * as reactRouterDom from 'react-router-dom';
 
-interface ToOptions {
-  pathname?: string;
-  hash?: string;
-  search?: string;
-}
-
-interface NavigateProps {
-  to: string | ToOptions;
-}
-
 declare module 'react-router-dom' {
-  export const Navigate: React.FC<NavigateProps>;
+  export interface ToOptions {
+    pathname?: string;
+    hash?: string;
+    search?: string;
+  }
   export const Routes: React.FC;
+  export const useNavigate: () => (to: toOptions) => void;
 }

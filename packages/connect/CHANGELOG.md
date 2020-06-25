@@ -3,6 +3,93 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.7.7](https://github.com/blockstack/ux/compare/@blockstack/connect@2.7.6...@blockstack/connect@2.7.7) (2020-06-24)
+
+
+### Bug Fixes
+
+* ui version behind published ([8198ca0](https://github.com/blockstack/ux/commit/8198ca050baa5e7294f99f4521aba78cab7635d8))
+
+
+
+
+
+## [2.7.6](https://github.com/blockstack/ux/compare/@blockstack/connect@2.7.4...@blockstack/connect@2.7.6) (2020-06-24)
+
+
+### Bug Fixes
+
+* better readme for firefox install ([cbecc86](https://github.com/blockstack/ux/commit/cbecc86e975a9b758260dbb16e3c29a938717d60))
+* connect version was behind published ([2d7633e](https://github.com/blockstack/ux/commit/2d7633e8b842cf231f10c2ea032de3bcd67258ff))
+* tweaks to get extension working ([e068dce](https://github.com/blockstack/ux/commit/e068dcec1eca8c30375564a748ff3df4f0e8c715))
+
+
+
+
+
+## [2.7.4](https://github.com/blockstack/ux/compare/@blockstack/connect@2.7.3...@blockstack/connect@2.7.4) (2020-06-10)
+
+**Note:** Version bump only for package @blockstack/connect
+
+
+
+
+
+## [2.7.3](https://github.com/blockstack/ux/compare/@blockstack/connect@2.7.2...@blockstack/connect@2.7.3) (2020-06-07)
+
+
+### Bug Fixes
+
+* better handling for mobile and blocked popups ([3151863](https://github.com/blockstack/ux/commit/31518632bf91c6217734c21c1163ae076f22368a))
+
+
+
+
+
+## [2.7.2](https://github.com/blockstack/ux/compare/@blockstack/connect@2.7.1...@blockstack/connect@2.7.2) (2020-05-21)
+
+**Note:** Version bump only for package @blockstack/connect
+
+
+
+
+
+## [2.7.1](https://github.com/blockstack/ux/compare/@blockstack/connect@2.6.0...@blockstack/connect@2.7.1) (2020-05-15)
+
+**Note:** Version bump only for package @blockstack/connect
+
+
+
+
+
+# [2.6.0](https://github.com/blockstack/ux/compare/@blockstack/connect@2.4.0...@blockstack/connect@2.6.0) (2020-05-06)
+
+
+### Bug Fixes
+
+* **connect:** dep adjustments ([28cf998](https://github.com/blockstack/ux/commit/28cf998777e66a36e9d9568c05c5f235f7fcb721))
+* shouldForwardProp updates ([a2d3964](https://github.com/blockstack/ux/commit/a2d396459b62a1d11dd816b618e7f7e2edc3fe66))
+
+
+### Features
+
+* codebox and highlighter ([b9056f8](https://github.com/blockstack/ux/commit/b9056f8102eff8d32898201717a3cd3699234561))
+
+
+
+
+
+# [2.4.0](https://github.com/blockstack/ux/compare/@blockstack/connect@2.3.1...@blockstack/connect@2.4.0) (2020-04-30)
+
+
+### Features
+
+* remove secret key branding, [#334](https://github.com/blockstack/ux/issues/334) ([e57c8bc](https://github.com/blockstack/ux/commit/e57c8bc84540b352078e56f19cada41ba0ef6904))
+
+
+
+
+
 ## [2.3.1](https://github.com/blockstack/ux/compare/@blockstack/connect@2.3.0...@blockstack/connect@2.3.1) (2020-03-12)
 
 **Note:** Version bump only for package @blockstack/connect

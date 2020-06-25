@@ -60,30 +60,38 @@ export const Button = forwardRef<Ref<HTMLDivElement>, ButtonProps>(
         fontWeight="medium"
         position="relative"
         data-active={isActive ? 'true' : undefined}
-        as={'button' || Comp}
+        as={Comp || 'button'}
         {...rest}
         {...styles}
         {...bind}
       >
-        <Box as="span" display="flex" alignItems="center" justifyContent="center" position="relative" zIndex={5}>
+        <Box
+          as="span"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          position="relative"
+          zIndex={5}
+        >
           {isLoading && (
             <Spinner
               position={loadingText ? 'relative' : 'absolute'}
-              mr={loadingText ? 2 : 'unset'}
               mx={!loadingText ? 'auto' : 'unset'}
               color="currentColor"
               size="sm"
             />
           )}
           {isLoading
-            ? loadingText || (
-                <Box as="span" opacity={0}>
+            ? <Box ml="tight">{loadingText}</Box> || (
+                <Box ml="tight" as="span" opacity={0}>
                   {children}
                 </Box>
               )
             : children}
         </Box>
-        {mode === 'secondary' ? null : <HoverChange isDisabled={isDisabled || false} isHovered={hovered} />}
+        {mode === 'primary' ? (
+          <HoverChange isDisabled={isDisabled || false} isHovered={hovered} />
+        ) : null}
       </PseudoBox>
     );
   }

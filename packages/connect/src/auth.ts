@@ -54,8 +54,6 @@ export const authenticate = async ({
     }
   );
 
-  const extensionURL = await window.BlockstackProvider?.getURL();
-  const authURL = new URL(extensionURL || authOrigin || defaultAuthURL);
   const params = window.location.search
     .substr(1)
     .split('&')
@@ -67,8 +65,14 @@ export const authenticate = async ({
 
   const path = sendToSignIn ? 'sign-in' : 'sign-up';
 
+  const extensionURL = await window.BlockstackProvider?.getURL();
+  const authURL = new URL(extensionURL || authOrigin || defaultAuthURL);
+
   const popup = popupCenter({
-    url: `${authURL.origin}/#/${path}?${urlParams.toString()}`,
+    url: `${authURL.origin}/index.html#/${path}?${urlParams.toString()}`,
+    // If the extension is installed, dont worry about popup blocking
+    // Otherwise, firefox will open the popup and a new tab.
+    skipPopupFallback: !!window.BlockstackProvider,
   });
 
   setupListener({ popup, authRequest, finished, authURL, userSession });

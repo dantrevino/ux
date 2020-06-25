@@ -2,8 +2,9 @@ import React from 'react';
 
 import { ThemeProvider, Box, theme, Text, Flex, CSSReset, Button, Stack } from '@blockstack/ui';
 import { Connect, AuthOptions, useConnect } from '@blockstack/connect';
+import { UserSession, AppConfig } from 'blockstack';
 
-const icon = `${document.location.href}/assets/messenger-app-icon.png`;
+const icon = `${document.location.origin}/assets/messenger-app-icon.png`;
 let authOrigin = 'http://localhost:8080';
 // In order to have deploy previews use the same version of the authenticator,
 // we detect if this is a 'deploy preview' and change the origin to point to the
@@ -82,6 +83,20 @@ export const App: React.FC = () => {
   const [authResponse, setAuthResponse] = React.useState('');
   const [appPrivateKey, setAppPrivateKey] = React.useState('');
 
+  const appConfig = new AppConfig();
+  const userSession = new UserSession({ appConfig });
+
+  const handleRedirectAuth = async () => {
+    if (userSession.isSignInPending()) {
+      const userData = await userSession.handlePendingSignIn();
+      setState(() => userData);
+    }
+  };
+
+  React.useEffect(() => {
+    void handleRedirectAuth();
+  }, []);
+
   const authOptions: AuthOptions = {
     manifestPath: '/static/manifest.json',
     redirectTo: '/',
@@ -107,11 +122,22 @@ export const App: React.FC = () => {
     <Connect authOptions={authOptions}>
       <ThemeProvider theme={theme}>
         <CSSReset />
-        <Flex direction="column" height="100vh" width="100vw" align="center" justify="center" bg="whitesmoke">
+        <Flex
+          direction="column"
+          height="100vh"
+          width="100vw"
+          align="center"
+          justify="center"
+          bg="whitesmoke"
+        >
           {authResponse && <input type="hidden" id="auth-response" value={authResponse} />}
           {appPrivateKey && <input type="hidden" id="app-private-key" value={appPrivateKey} />}
 
-          {!isSignedIn ? <AppContent /> : <SignedIn handleSignOut={handleSignOut} username={state.username} />}
+          {!isSignedIn ? (
+            <AppContent />
+          ) : (
+            <SignedIn handleSignOut={handleSignOut} username={state.username} />
+          )}
         </Flex>
       </ThemeProvider>
     </Connect>

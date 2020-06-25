@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as StyledSystem from 'styled-system';
-import { PseudoBoxProps } from '../pseudo-box/types';
+import { PseudoBoxProps } from '../pseudo-box';
 
 /**
  * The size of the button
@@ -17,14 +17,13 @@ export type ButtonVariants = 'outline' | 'unstyled' | 'link' | 'solid';
 /**
  * The mode of the button style to use.
  */
-export type ButtonModes = 'primary' | 'secondary';
+export type ButtonModes = 'primary' | 'secondary' | 'tertiary';
 
-export interface CustomStyles {
-  primary: PseudoBoxProps;
-  secondary: PseudoBoxProps;
-}
+export type CustomStyles = {
+  [key in ButtonModes]: PseudoBoxProps;
+};
 
-interface IButtonPropsBase {
+interface ButtonPropsBase {
   size?: ButtonSizes;
   isLoading?: boolean;
   variantColor?: ButtonColorVariants;
@@ -73,11 +72,11 @@ interface IButtonPropsBase {
   iconSpacing?: StyledSystem.MarginProps['margin'];
 }
 
-export interface IButtonStyles {
+export interface ButtonStyles {
   variant: ButtonVariants;
   mode: ButtonModes;
   size: ButtonSizes;
   customStyles?: CustomStyles;
 }
 
-export type ButtonProps = IButtonPropsBase & PseudoBoxProps & React.RefAttributes<HTMLButtonElement>;
+export type ButtonProps = ButtonPropsBase & PseudoBoxProps & React.RefAttributes<HTMLButtonElement>;

@@ -5,6 +5,7 @@ import { ECPair, bip32 } from 'bitcoinjs-lib';
 import { decryptContent, encryptContent, getPublicKeyFromPrivate } from 'blockstack';
 import { DEFAULT_GAIA_HUB } from '../src/utils/gaia';
 import { mnemonicToSeed } from 'bip39';
+import { ChainID } from '@blockstack/stacks-transactions';
 
 describe('Restoring a wallet', () => {
   test('restores an existing wallet and keychain', async () => {
@@ -35,7 +36,7 @@ describe('Restoring a wallet', () => {
       },
     ];
 
-    const wallet = await Wallet.restore(password, backupPhrase);
+    const wallet = await Wallet.restore(password, backupPhrase, ChainID.Mainnet);
     expect(wallet.bitcoinPublicKeychain).toEqual(bitcoinPublicKeychain);
     expect(wallet.identityPublicKeychain).toEqual(identityPublicKeychain);
     expect(wallet.firstBitcoinAddress).toEqual(firstBitcoinAddress);
@@ -49,7 +50,7 @@ describe('Restoring a wallet', () => {
 
   test('generates and restores the same wallet', async () => {
     const password = 'password';
-    const generated = await Wallet.generate(password);
+    const generated = await Wallet.generate(password, ChainID.Testnet);
 
     const encryptedBackupPhrase = generated.encryptedBackupPhrase;
 
@@ -57,13 +58,22 @@ describe('Restoring a wallet', () => {
 
     const backupPhrase = plainTextBuffer.toString();
 
-    const restored = await Wallet.restore(password, backupPhrase);
+    const restored = await Wallet.restore(password, backupPhrase, ChainID.Mainnet);
 
     expect(restored.identityPublicKeychain).toEqual(generated.identityPublicKeychain);
   });
 
+  test('generates 24-word seed phrase', async () => {
+    const pass = 'password';
+    const wallet = await Wallet.generateStrong(pass, ChainID.Testnet);
+    const encryptedBackupPhrase = wallet.encryptedBackupPhrase;
+    const plainTextBuffer = await decrypt(Buffer.from(encryptedBackupPhrase, 'hex'), pass);
+    const backupPhrase = plainTextBuffer.toString();
+    expect(backupPhrase.split(' ').length).toEqual(24);
+  });
+
   test('generates a config private key', async () => {
-    const wallet = await Wallet.generate('password');
+    const wallet = await Wallet.generate('password', ChainID.Testnet);
     expect(wallet.configPrivateKey).not.toBeFalsy();
     const node = ECPair.fromPrivateKey(Buffer.from(wallet.configPrivateKey, 'hex'));
     expect(node.privateKey).not.toBeFalsy();
@@ -80,7 +90,7 @@ test('returns null if no config in gaia', async () => {
       })
     )
     .once('', { status: 404 });
-  const wallet = await Wallet.generate('password');
+  const wallet = await Wallet.generate('password', ChainID.Testnet);
   const hubConfig = await wallet.createGaiaConfig('https://gaia.blockstack.org');
   const config = await wallet.fetchConfig(hubConfig);
   expect(config).toBeFalsy();
@@ -107,7 +117,7 @@ test('returns config if present', async () => {
     ],
   };
 
-  const wallet = await Wallet.generate('password');
+  const wallet = await Wallet.generate('password', ChainID.Testnet);
   const publicKey = getPublicKeyFromPrivate(wallet.configPrivateKey);
   const encrypted = await encryptContent(JSON.stringify(stubConfig), { publicKey });
 
@@ -129,7 +139,9 @@ test('returns config if present', async () => {
   }
   expect(config.identities.length).toEqual(1);
   const identity = config.identities[0];
-  expect(identity.apps['http://localhost:3000']).toEqual(stubConfig.identities[0].apps['http://localhost:3000']);
+  expect(identity.apps['http://localhost:3000']).toEqual(
+    stubConfig.identities[0].apps['http://localhost:3000']
+  );
 });
 
 test('creates a config', async () => {
@@ -143,7 +155,7 @@ test('creates a config', async () => {
     )
     .once('', { status: 404 })
     .once(JSON.stringify({ publicUrl: 'asdf' }));
-  const wallet = await Wallet.generate('password');
+  const wallet = await Wallet.generate('password', ChainID.Testnet);
   const hubConfig = await wallet.createGaiaConfig('https://gaia.blockstack.org');
   const config = await wallet.getOrCreateConfig(hubConfig);
   expect(Object.keys(config.identities[0].apps).length).toEqual(0);
@@ -165,7 +177,7 @@ test('updates wallet config', async () => {
     .once(JSON.stringify({ publicUrl: 'asdf' }))
     .once(JSON.stringify({ publicUrl: 'asdf' }));
 
-  const wallet = await Wallet.generate('password');
+  const wallet = await Wallet.generate('password', ChainID.Testnet);
   const gaiaConfig = await wallet.createGaiaConfig('https://gaia.blockstack.org');
   await wallet.getOrCreateConfig(gaiaConfig);
   const app: ConfigApp = {
@@ -182,7 +194,9 @@ test('updates wallet config', async () => {
   });
   expect(fetchMock.mock.calls.length).toEqual(4);
   const body = JSON.parse(fetchMock.mock.calls[3][1].body);
-  const decrypted = (await decryptContent(JSON.stringify(body), { privateKey: wallet.configPrivateKey })) as string;
+  const decrypted = (await decryptContent(JSON.stringify(body), {
+    privateKey: wallet.configPrivateKey,
+  })) as string;
   const config = JSON.parse(decrypted);
   expect(config).toEqual(wallet.walletConfig);
 });
@@ -200,7 +214,7 @@ test('updates config for reusing id warning', async () => {
     .once(JSON.stringify({ publicUrl: 'asdf' }))
     .once(JSON.stringify({ publicUrl: 'asdf' }));
 
-  const wallet = await Wallet.generate('password');
+  const wallet = await Wallet.generate('password', ChainID.Testnet);
   const gaiaConfig = await wallet.createGaiaConfig('https://gaia.blockstack.org');
   await wallet.getOrCreateConfig(gaiaConfig);
   expect(wallet.walletConfig?.hideWarningForReusingIdentity).toBeFalsy();
@@ -208,13 +222,15 @@ test('updates config for reusing id warning', async () => {
   expect(wallet.walletConfig?.hideWarningForReusingIdentity).toBeTruthy();
   expect(fetchMock.mock.calls.length).toEqual(4);
   const body = JSON.parse(fetchMock.mock.calls[3][1].body);
-  const decrypted = (await decryptContent(JSON.stringify(body), { privateKey: wallet.configPrivateKey })) as string;
+  const decrypted = (await decryptContent(JSON.stringify(body), {
+    privateKey: wallet.configPrivateKey,
+  })) as string;
   const config = JSON.parse(decrypted);
   expect(config.hideWarningForReusingIdentity).toBeTruthy();
 });
 
 test('restoreIdentities', async () => {
-  const wallet = await Wallet.generate('password');
+  const wallet = await Wallet.generate('password', ChainID.Testnet);
 
   const stubConfig: WalletConfig = {
     identities: [
@@ -240,7 +256,10 @@ test('restoreIdentities', async () => {
   const encrypted = await encryptContent(JSON.stringify(stubConfig), { publicKey });
   fetchMock.once(encrypted);
 
-  const plainTextBuffer = await decrypt(Buffer.from(wallet.encryptedBackupPhrase, 'hex'), 'password');
+  const plainTextBuffer = await decrypt(
+    Buffer.from(wallet.encryptedBackupPhrase, 'hex'),
+    'password'
+  );
   const seed = await mnemonicToSeed(plainTextBuffer);
   const rootNode = bip32.fromSeed(seed);
   await wallet.restoreIdentities({ gaiaReadURL: DEFAULT_GAIA_HUB, rootNode });

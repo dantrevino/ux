@@ -8,25 +8,30 @@ import { Subdomains, registrars } from '../profiles';
 
 const IDENTITY_KEYCHAIN = 888;
 const BLOCKSTACK_ON_BITCOIN = 0;
-export function getIdentityPrivateKeychain(masterKeychain: BIP32Interface) {
-  return masterKeychain.deriveHardened(IDENTITY_KEYCHAIN).deriveHardened(BLOCKSTACK_ON_BITCOIN);
+
+export function getIdentityPrivateKeychain(rootNode: BIP32Interface) {
+  return rootNode.deriveHardened(IDENTITY_KEYCHAIN).deriveHardened(BLOCKSTACK_ON_BITCOIN);
 }
 
 const EXTERNAL_ADDRESS = 'EXTERNAL_ADDRESS';
 const CHANGE_ADDRESS = 'CHANGE_ADDRESS';
 
-export function getBitcoinPrivateKeychain(masterKeychain: BIP32Interface) {
+export function getBitcoinPrivateKeychain(rootNode: BIP32Interface) {
   const BIP_44_PURPOSE = 44;
   const BITCOIN_COIN_TYPE = 0;
   const ACCOUNT_INDEX = 0;
 
-  return masterKeychain
+  return rootNode
     .deriveHardened(BIP_44_PURPOSE)
     .deriveHardened(BITCOIN_COIN_TYPE)
     .deriveHardened(ACCOUNT_INDEX);
 }
 
-export function getBitcoinAddressNode(bitcoinKeychain: BIP32Interface, addressIndex = 0, chainType = EXTERNAL_ADDRESS) {
+export function getBitcoinAddressNode(
+  bitcoinKeychain: BIP32Interface,
+  addressIndex = 0,
+  chainType = EXTERNAL_ADDRESS
+) {
   let chain = null;
 
   if (chainType === EXTERNAL_ADDRESS) {
@@ -40,7 +45,10 @@ export function getBitcoinAddressNode(bitcoinKeychain: BIP32Interface, addressIn
   return bitcoinKeychain.derive(chain).derive(addressIndex);
 }
 
-export async function getIdentityOwnerAddressNode(identityPrivateKeychain: BIP32Interface, identityIndex = 0) {
+export async function getIdentityOwnerAddressNode(
+  identityPrivateKeychain: BIP32Interface,
+  identityIndex = 0
+) {
   if (identityPrivateKeychain.isNeutered()) {
     throw new Error('You need the private key to generate identity addresses');
   }
@@ -83,9 +91,12 @@ export async function deriveIdentityKeyPair(
   return keyPair;
 }
 
-export async function getBlockchainIdentities(masterKeychain: BIP32Interface, identitiesToGenerate: number) {
-  const identityPrivateKeychainNode = getIdentityPrivateKeychain(masterKeychain);
-  const bitcoinPrivateKeychainNode = getBitcoinPrivateKeychain(masterKeychain);
+export async function getBlockchainIdentities(
+  rootNode: BIP32Interface,
+  identitiesToGenerate: number
+) {
+  const identityPrivateKeychainNode = getIdentityPrivateKeychain(rootNode);
+  const bitcoinPrivateKeychainNode = getBitcoinPrivateKeychain(rootNode);
 
   const identityPublicKeychainNode = identityPrivateKeychainNode.neutered();
   const identityPublicKeychain = identityPublicKeychainNode.toBase58();
@@ -102,7 +113,7 @@ export async function getBlockchainIdentities(masterKeychain: BIP32Interface, id
   // We pre-generate a number of identity addresses so that we
   // don't have to prompt the user for the password on each new profile
   for (let addressIndex = 0; addressIndex < identitiesToGenerate; addressIndex++) {
-    const identity = await makeIdentity(masterKeychain, addressIndex);
+    const identity = await makeIdentity(rootNode, addressIndex);
     identities.push(identity);
     identityKeypairs.push(identity.keyPair);
     identityAddresses.push(identity.address);
@@ -118,9 +129,12 @@ export async function getBlockchainIdentities(masterKeychain: BIP32Interface, id
   };
 }
 
-export const makeIdentity = async (masterKeychain: BIP32Interface, index: number) => {
-  const identityPrivateKeychainNode = getIdentityPrivateKeychain(masterKeychain);
-  const identityOwnerAddressNode = await getIdentityOwnerAddressNode(identityPrivateKeychainNode, index);
+export const makeIdentity = async (rootNode: BIP32Interface, index: number) => {
+  const identityPrivateKeychainNode = getIdentityPrivateKeychain(rootNode);
+  const identityOwnerAddressNode = await getIdentityOwnerAddressNode(
+    identityPrivateKeychainNode,
+    index
+  );
   const identityKeyPair = await deriveIdentityKeyPair(identityOwnerAddressNode);
   const identity = new Identity({
     keyPair: identityKeyPair,
@@ -163,7 +177,10 @@ export const validateSubdomainFormat = (identityName: string): IdentityNameValid
   return null;
 };
 
-export const validateSubdomainAvailability = async (name: string, subdomain: Subdomains = Subdomains.BLOCKSTACK) => {
+export const validateSubdomainAvailability = async (
+  name: string,
+  subdomain: Subdomains = Subdomains.BLOCKSTACK
+) => {
   const url = `${registrars[subdomain].apiUrl}/${name.toLowerCase()}.${subdomain}`;
   const resp = await fetch(url);
   const data = await resp.json();
@@ -201,7 +218,10 @@ export const recursiveRestoreIdentities = async ({
  * @param name the subdomain to be registered
  * @param subdomain a valid Subdomains enum
  */
-export const validateSubdomain = async (name: string, subdomain: Subdomains = Subdomains.BLOCKSTACK) => {
+export const validateSubdomain = async (
+  name: string,
+  subdomain: Subdomains = Subdomains.BLOCKSTACK
+) => {
   const error = validateSubdomainFormat(name);
   if (error) {
     return error;

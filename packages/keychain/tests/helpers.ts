@@ -1,4 +1,5 @@
 import Wallet from '../src/wallet';
+import { ChainID } from '@blockstack/stacks-transactions';
 
 const defaultSeed =
   'sound idle panel often situate develop unit text design antenna ' +
@@ -6,7 +7,7 @@ const defaultSeed =
   'update opinion media';
 
 export const getWallet = async (seed: string = defaultSeed) => {
-  const wallet = await Wallet.restore('password', seed);
+  const wallet = await Wallet.restore('password', seed, ChainID.Mainnet);
   return wallet;
 };
 
@@ -17,7 +18,7 @@ export const getIdentity = async (seed: string = defaultSeed) => {
 };
 
 export const getNewIdentity = async () => {
-  const wallet = await Wallet.generate('password');
+  const wallet = await Wallet.generate('password', ChainID.Testnet);
   return wallet.identities[0];
 };
 
@@ -44,9 +45,12 @@ export const profileResponse = [
           '@type': 'Person',
           '@context': 'http://schema.org',
           apps: {
-            'https://banter.pub': 'https://gaia.blockstack.org/hub/1DkuAChufYjTkTCejJgSztuqp5KdykpWap/',
-            'http://127.0.0.1:3000': 'https://gaia.blockstack.org/hub/15hALnEJ8fvXNgRyzmVspDyZcGExLGHNSf/',
-            'https://blockstack.github.io': 'https://gaia.blockstack.org/hub/1EDuvKfzuNRUentz1t5jfxT9fW1HP2NJGW/',
+            'https://banter.pub':
+              'https://gaia.blockstack.org/hub/1DkuAChufYjTkTCejJgSztuqp5KdykpWap/',
+            'http://127.0.0.1:3000':
+              'https://gaia.blockstack.org/hub/15hALnEJ8fvXNgRyzmVspDyZcGExLGHNSf/',
+            'https://blockstack.github.io':
+              'https://gaia.blockstack.org/hub/1EDuvKfzuNRUentz1t5jfxT9fW1HP2NJGW/',
           },
           api: {
             gaiaHubConfig: {
@@ -56,7 +60,8 @@ export const profileResponse = [
           },
         },
       },
-      signature: 'IqsvlAnuWd3H8K0hZHdb3p4jm2KC2UXQv0PBKR9U_kFikfXw4wvGbmfh5HYp4q_5sHi2oZZoNPygsdgV7UFQjg',
+      signature:
+        'IqsvlAnuWd3H8K0hZHdb3p4jm2KC2UXQv0PBKR9U_kFikfXw4wvGbmfh5HYp4q_5sHi2oZZoNPygsdgV7UFQjg',
     },
   },
 ];

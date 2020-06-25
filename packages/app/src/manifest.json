@@ -10,14 +10,6 @@
   },
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "permissions": [
-    "activeTab",
-    "alarms",
-    "bookmarks",
-    "cookies",
-    "storage",
-    "tabs",
-    "webRequest",
-    "webRequestBlocking",
     "*://*/*"
   ],
   "manifest_version": 2,
@@ -25,11 +17,10 @@
     "scripts": ["background.js"],
     "persistent": true
   },
-  "web_accessible_resources": ["inpage.js"],
+  "web_accessible_resources": ["inpage.js", "index.html"],
   "browser_action": {
     "default_title": "Blockstack",
-    "default_icon": "assets/logo-16@3x.png",
-    "default_popup": "popup.html"
+    "default_icon": "assets/logo-16@3x.png"
   },
   "commands": {
     "_execute_browser_action": {

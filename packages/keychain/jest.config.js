@@ -6,14 +6,10 @@ module.exports = {
   globals: {
     'ts-jest': {
       diagnostics: {
-        ignoreCodes: ['TS151001']
-      }
-    }
+        ignoreCodes: ['TS151001'],
+      },
+    },
   },
-  setupFiles: [
-    './tests/global-setup.ts'
-  ],
-  setupFilesAfterEnv: [
-    './tests/setup.ts'
-  ]
+  setupFiles: ['./tests/global-setup.ts'],
+  setupFilesAfterEnv: ['./tests/setup.ts'],
 };

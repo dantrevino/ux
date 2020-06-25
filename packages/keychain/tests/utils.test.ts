@@ -1,3 +1,4 @@
+import './setup';
 import {
   IdentityNameValidityError,
   validateSubdomainFormat,
@@ -9,6 +10,7 @@ import { Subdomains, registrars, Wallet, decrypt } from '../src';
 import { mnemonicToSeed } from 'bip39';
 import { bip32 } from 'bitcoinjs-lib';
 import { profileResponse } from './helpers';
+import { ChainID } from '@blockstack/stacks-transactions';
 
 describe(validateSubdomainFormat.name, () => {
   it('returns error state when string less than 8 characters', () => {
@@ -37,12 +39,12 @@ describe(validateSubdomainFormat.name, () => {
   });
 
   it('returns error state when using sneaky homoglyphs', () => {
-    const legitIndentity = 'kyranjamie';
+    const legitIdentity = 'kyranjamie';
     const homoglyph = 'kyrаnjamie';
     // eslint-disable-next-line
     // @ts-ignore
-    expect(legitIndentity === homoglyph).toEqual(false);
-    const shouldPassResult = validateSubdomainFormat(legitIndentity);
+    expect(legitIdentity === homoglyph).toEqual(false);
+    const shouldPassResult = validateSubdomainFormat(legitIdentity);
     expect(shouldPassResult).toBeNull();
 
     const shouldFailResult = validateSubdomainFormat(homoglyph);
@@ -89,8 +91,11 @@ describe(validateSubdomain.name, () => {
 });
 
 test('recursively makes identities', async () => {
-  const wallet = await Wallet.generate('password');
-  const plainTextBuffer = await decrypt(Buffer.from(wallet.encryptedBackupPhrase, 'hex'), 'password');
+  const wallet = await Wallet.generate('password', ChainID.Testnet);
+  const plainTextBuffer = await decrypt(
+    Buffer.from(wallet.encryptedBackupPhrase, 'hex'),
+    'password'
+  );
   const seed = await mnemonicToSeed(plainTextBuffer);
   const rootNode = bip32.fromSeed(seed);
 

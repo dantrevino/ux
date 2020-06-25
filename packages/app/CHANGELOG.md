@@ -3,6 +3,126 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.10.1](https://github.com/blockstack/blockstack-app/compare/@blockstack/app@1.10.0...@blockstack/app@1.10.1) (2020-06-24)
+
+
+### Bug Fixes
+
+* ui version behind published ([8198ca0](https://github.com/blockstack/blockstack-app/commit/8198ca050baa5e7294f99f4521aba78cab7635d8))
+
+
+
+
+
+# [1.10.0](https://github.com/blockstack/blockstack-app/compare/@blockstack/app@1.9.3...@blockstack/app@1.10.0) (2020-06-24)
+
+
+### Bug Fixes
+
+* better readme for firefox install ([cbecc86](https://github.com/blockstack/blockstack-app/commit/cbecc86e975a9b758260dbb16e3c29a938717d60))
+* connect version was behind published ([2d7633e](https://github.com/blockstack/blockstack-app/commit/2d7633e8b842cf231f10c2ea032de3bcd67258ff))
+* create secret key link not working, [#436](https://github.com/blockstack/blockstack-app/issues/436) ([c5870f5](https://github.com/blockstack/blockstack-app/commit/c5870f5422c49c754943eba70d7cc5285fc0ea01))
+* home page alignment, [#440](https://github.com/blockstack/blockstack-app/issues/440) ([06dde15](https://github.com/blockstack/blockstack-app/commit/06dde15a651f901222650c015c75f8c1343068b6))
+* keychain package was behind published version ([acbd4b0](https://github.com/blockstack/blockstack-app/commit/acbd4b064db61a60f01ce60ab75f9f2f39456eb8))
+* remove unused perms from manifest ([52abc1f](https://github.com/blockstack/blockstack-app/commit/52abc1fc91396dd04d322894a18ed257f2a13864))
+* tweaks to get extension working ([e068dce](https://github.com/blockstack/blockstack-app/commit/e068dcec1eca8c30375564a748ff3df4f0e8c715))
+* use async dispatch, fixes [#441](https://github.com/blockstack/blockstack-app/issues/441) ([b097348](https://github.com/blockstack/blockstack-app/commit/b0973483dac295747cd511af87e42d3b5e156185))
+
+
+### Features
+
+* add variants to username error state ([19b603b](https://github.com/blockstack/blockstack-app/commit/19b603ba4ba40b42f2d0a9d99cf274af1c3eaf20))
+
+
+
+
+
+## [1.9.3](https://github.com/blockstack/blockstack-app/compare/@blockstack/app@1.9.2...@blockstack/app@1.9.3) (2020-06-10)
+
+**Note:** Version bump only for package @blockstack/app
+
+
+
+
+
+## [1.9.2](https://github.com/blockstack/blockstack-app/compare/@blockstack/app@1.9.1...@blockstack/app@1.9.2) (2020-06-07)
+
+
+### Bug Fixes
+
+* better handling for mobile and blocked popups ([3151863](https://github.com/blockstack/blockstack-app/commit/31518632bf91c6217734c21c1163ae076f22368a))
+
+
+
+
+
+## [1.9.1](https://github.com/blockstack/blockstack-app/compare/@blockstack/app@1.9.0...@blockstack/app@1.9.1) (2020-05-21)
+
+**Note:** Version bump only for package @blockstack/app
+
+
+
+
+
+# [1.9.0](https://github.com/blockstack/blockstack-app/compare/@blockstack/app@1.8.0...@blockstack/app@1.9.0) (2020-05-15)
+
+
+### Bug Fixes
+
+* **app:** routing bug when trying to create new key, fixes [#381](https://github.com/blockstack/blockstack-app/issues/381) ([66f78aa](https://github.com/blockstack/blockstack-app/commit/66f78aaf64c3dd38555173ba68ca49ef9445bb53))
+
+
+### Features
+
+* use window.location for ios redirect ([9d83fc9](https://github.com/blockstack/blockstack-app/commit/9d83fc916e029d437f6a2e8af9b19b734f4aa3ac))
+
+
+
+
+
+# [1.8.0](https://github.com/blockstack/blockstack-app/compare/@blockstack/app@1.7.0...@blockstack/app@1.8.0) (2020-05-06)
+
+
+### Features
+
+* codebox and highlighter ([b9056f8](https://github.com/blockstack/blockstack-app/commit/b9056f8102eff8d32898201717a3cd3699234561))
+
+
+
+
+
+# [1.7.0](https://github.com/blockstack/blockstack-app/compare/@blockstack/app@1.6.1...@blockstack/app@1.7.0) (2020-04-30)
+
+
+### Bug Fixes
+
+* clear onboarding path on sign out [#341](https://github.com/blockstack/blockstack-app/issues/341) ([f0820c9](https://github.com/blockstack/blockstack-app/commit/f0820c999143f8a00d89bcc04ecef0fa1699b5f1))
+* document.title bug [#335](https://github.com/blockstack/blockstack-app/issues/335), caused by invalid redux hydration ([882fdd6](https://github.com/blockstack/blockstack-app/commit/882fdd6bfcb34e1ff1caed114065dc7b7b228e4d))
+* document.title undefined, fixes [#335](https://github.com/blockstack/blockstack-app/issues/335) ([378b903](https://github.com/blockstack/blockstack-app/commit/378b903af1d0c66eed499d4ddba951b3a62bb658))
+* dont show secret key when logged out, [#340](https://github.com/blockstack/blockstack-app/issues/340) ([355d518](https://github.com/blockstack/blockstack-app/commit/355d518c545527337db8efad3038bf65544e5a33))
+* missing app icon on username error, [#338](https://github.com/blockstack/blockstack-app/issues/338) ([7296f63](https://github.com/blockstack/blockstack-app/commit/7296f63c91d53bbc06fdc995d672c0c978c76adf))
+* ts error with react-router import ([8ecef0f](https://github.com/blockstack/blockstack-app/commit/8ecef0fbd537666c66f1f41bf85371b8ca80d166))
+
+
+### Features
+
+* remove secret key branding, [#334](https://github.com/blockstack/blockstack-app/issues/334) ([e57c8bc](https://github.com/blockstack/blockstack-app/commit/e57c8bc84540b352078e56f19cada41ba0ef6904))
+
+
+
+
+
+## [1.6.1](https://github.com/blockstack/blockstack-app/compare/@blockstack/app@1.6.0...@blockstack/app@1.6.1) (2020-04-17)
+
+
+### Bug Fixes
+
+* profile info not set in authResponse ([9e48475](https://github.com/blockstack/blockstack-app/commit/9e4847544e89dc1c8abcebeda6d34dc2bf8a4c7f))
+
+
+
+
+
 # [1.6.0](https://github.com/blockstack/blockstack-app/compare/@blockstack/app@1.5.1...@blockstack/app@1.6.0) (2020-03-12)
 
 

@@ -55,7 +55,12 @@ export const finalizeAuthResponse = ({ decodedAuthRequest, authRequest, authResp
   setTimeout(() => {
     if (!didSendMessageBack) {
       const redirect = `${decodedAuthRequest.redirect_uri}?authResponse=${authResponse}`;
-      window.open(redirect);
+      const { client } = decodedAuthRequest;
+      if (client === 'ios' || client === 'android') {
+        window.location.href = redirect;
+      } else {
+        window.open(redirect);
+      }
     }
     window.close();
   }, 150);
@@ -63,7 +68,6 @@ export const finalizeAuthResponse = ({ decodedAuthRequest, authRequest, authResp
     if (authRequest && event.data.authRequest === authRequest) {
       const source = getEventSourceWindow(event);
       if (source) {
-        didSendMessageBack = true;
         source.postMessage(
           {
             authRequest,
@@ -72,6 +76,7 @@ export const finalizeAuthResponse = ({ decodedAuthRequest, authRequest, authResp
           },
           event.origin
         );
+        didSendMessageBack = true;
       }
     }
   });

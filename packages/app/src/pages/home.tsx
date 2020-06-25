@@ -1,18 +1,18 @@
 import React from 'react';
 import { Box, PseudoBox, Flex, Text } from '@blockstack/ui';
-import { LogoWithName } from '@components/logo-with-name';
 import { SignOut } from '@components/sign-out';
 import { useAnalytics } from '@common/hooks/use-analytics';
-import { useDispatch } from 'react-redux';
+import { useDispatch } from '@common/hooks/use-dispatch';
 import { ScreenPaths } from '@store/onboarding/types';
 import { useWallet } from '@common/hooks/use-wallet';
 import { doSignOut } from '@store/wallet';
+import { doSetOnboardingPath } from '@store/onboarding/actions';
 
 const SignedOut = () => (
   <Flex flexDirection="column" pb="120px" align="center" justify="center" flexGrow={1}>
     <Box>
       <Text fontSize="20px" lineHeight="28px" fontWeight="500">
-        You&apos;re signed out of Secret Key
+        You are now signed out
       </Text>
     </Box>
     <Box pt={2}>
@@ -47,10 +47,10 @@ export const Home = () => {
   const isSignedIn = identities.length > 0;
 
   return (
-    <Flex wrap="wrap" py={5} px={4} flexDirection="column" height="100vh">
+    <Flex wrap="wrap" py={5} px={4} flexDirection="column" minHeight="100vh">
       <Flex justifyContent="space-between" align="center">
-        <LogoWithName />
-        <SecretKeyButton />
+        <Box />
+        {isSignedIn ? <SecretKeyButton /> : null}
       </Flex>
       <Flex flex={1} mt={10} justifyContent={[null, 'center']}>
         {isSignedIn ? (
@@ -59,6 +59,7 @@ export const Home = () => {
             buttonMode="secondary"
             signOut={() => {
               dispatch(doSignOut());
+              dispatch(doSetOnboardingPath(undefined));
             }}
           />
         ) : (

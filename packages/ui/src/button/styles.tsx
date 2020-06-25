@@ -1,4 +1,4 @@
-import { ButtonModes, ButtonSizes, CustomStyles, IButtonStyles } from '../button';
+import { ButtonModes, ButtonSizes, CustomStyles, ButtonStyles } from './types';
 import { shadows } from '../theme/theme';
 
 const baseProps = {
@@ -19,13 +19,13 @@ const baseProps = {
 
 const sizes = {
   lg: {
-    height: 12,
+    minHeight: 12,
     minWidth: 9 * 14,
     fontSize: '14px !important',
     px: 5,
   },
   md: {
-    height: 10,
+    minHeight: 10,
     minWidth: 10,
     fontSize: '14px !important',
     px: 4,
@@ -68,7 +68,13 @@ const linkVariantProps = () => {
   };
 };
 
-const solidVariantProps = ({ mode, customStyles }: { mode: ButtonModes; customStyles: CustomStyles }) => {
+const solidVariantProps = ({
+  mode,
+  customStyles,
+}: {
+  mode: ButtonModes;
+  customStyles: CustomStyles;
+}) => {
   const style = {
     primary: {
       bg: 'blue',
@@ -86,6 +92,27 @@ const solidVariantProps = ({ mode, customStyles }: { mode: ButtonModes; customSt
       },
     },
     secondary: {
+      bg: 'blue.100',
+      color: 'blue',
+      border: '1px solid',
+      borderColor: 'blue.300',
+      boxShadow: null,
+      _hover: {
+        cursor: 'pointer',
+        bg: 'blue.200',
+      },
+      _focus: {
+        borderColor: 'blue.300',
+        boxShadow: shadows.focus,
+      },
+      _disabled: {
+        bg: 'blue.200',
+        cursor: 'not-allowed',
+        color: 'white',
+        border: 'none',
+      },
+    },
+    tertiary: {
       bg: 'white',
       color: 'blue',
       boxShadow: shadows['button.secondary'],
@@ -129,7 +156,7 @@ const variantProps = (props: any) => {
   }
 };
 
-const useButtonStyle = (props: IButtonStyles): any => ({
+const useButtonStyle = (props: ButtonStyles): any => ({
   ...baseProps,
   ...variantProps(props),
   ...sizeProps(props),
